@@ -2,15 +2,26 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserController } from './user/user.controller';
-import { UserService } from './user/user.service';
 import { UserModule } from './user/user.module';
 import { loggerMiddleware } from './common/middleware/logger.middleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
-import config from 'ormconfig';
+import { ConfigModule } from '@nestjs/config';
+import dbConfig from './config/db.config';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(config), UserModule, AuthModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      expandVariables: true,
+      load: [dbConfig],
+    }),
+    TypeOrmModule.forRootAsync({
+      useFactory: dbConfig,
+    }),
+    UserModule,
+    AuthModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

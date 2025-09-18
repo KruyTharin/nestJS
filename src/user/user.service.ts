@@ -1,7 +1,7 @@
 import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { findOrFail } from 'src/common/queries/query-utils';
@@ -24,6 +24,18 @@ export class UserService {
 
   async find(id: string): Promise<User> {
     const user = await findOrFail(this.userRepo, id, 'User');
+    return user;
+  }
+
+  async findByEmail(email: string) {
+    const user = await this.userRepo.findOne({
+      where: { email },
+    });
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+
     return user;
   }
 
