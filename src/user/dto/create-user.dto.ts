@@ -3,7 +3,7 @@ import { Role } from 'src/enums/role.enum';
 
 export class CreateUserDto {
   @IsString()
-  name: string;
+  username: string;
 
   @IsString()
   @IsEmail()

@@ -13,8 +13,6 @@ import { UserService } from './user.service';
 import { Role } from 'src/enums/role.enum';
 import { Roles } from 'src/decorators/role.descorator';
 import { CreateUserDto } from './dto/create-user.dto';
-import { IUser } from 'src/interfaces/user.interface';
-import { User } from 'src/entities/user.entity';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth/jwt-auth.guard';
 
 @Controller('/v1/user')
@@ -26,10 +24,9 @@ export class UserController {
     return await this.userService.create(createUser);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
-  async findAll(@Request() req): Promise<[User[], number]> {
-    console.log(req);
-
+  async findAll(@Request() req) {
     return this.userService.findAll();
   }
 
@@ -39,17 +36,20 @@ export class UserController {
     return this.userService.find(req.user.id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/:id')
-  async find(@Param('id') id: string): Promise<User> {
+  async find(@Param('id') id: string) {
     return this.userService.find(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete('/:id')
   @Roles(Role.ADMIN)
   async delete(@Param('id') id: string): Promise<string> {
     return this.userService.delete(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put('/:id')
   async update(
     @Param('id') id: string,

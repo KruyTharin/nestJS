@@ -5,6 +5,6 @@ export const loggerMiddleware = (
   res: Response,
   next: NextFunction,
 ) => {
-  console.log('Request...', req.body);
+  console.log('Middleware Request...', req.body);
   next();
 };

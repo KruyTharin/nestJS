@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
+import { RefreshAuthGuard } from './guard/refresh-auth/refresh-auth.guard';
 
 @Controller('/v1/auth')
 export class AuthController {
@@ -17,7 +18,13 @@ export class AuthController {
   @UseGuards(AuthGuard('local'))
   @Post('login')
   async login(@Request() req) {
-    const token = await this.authService.login(req.user.id);
-    return { id: req.user.id, token };
+    return await this.authService.login(req.user.id);
+  }
+
+  @UseGuards(RefreshAuthGuard)
+  @Post('refresh')
+  async refreshToken(@Request() req) {
+    console.log(req.user);
+    return await this.authService.refreshToken(req.user.id);
   }
 }
