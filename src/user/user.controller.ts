@@ -4,21 +4,24 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   Request,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { Role } from 'src/enums/role.enum';
-import { Roles } from 'src/decorators/role.descorator';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth/jwt-auth.guard';
+import { RoleGuard } from 'src/auth/guard/role/role.guard';
+import { Roles } from 'src/decorators/role.descorator';
+import { Role } from 'src/enums/role.enum';
 
 @Controller('/v1/user')
 export class UserController {
   constructor(private userService: UserService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() createUser: CreateUserDto) {
     return await this.userService.create(createUser);
@@ -38,13 +41,13 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/:id')
-  async find(@Param('id') id: string) {
+  async find(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.userService.find(id);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Delete('/:id')
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(Role.ADMIN)
+  @Delete('/:id')
   async delete(@Param('id') id: string): Promise<string> {
     return this.userService.delete(id);
   }

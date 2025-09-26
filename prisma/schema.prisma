@@ -13,6 +13,7 @@ model User {
   username String   @unique
   email    String   @unique
   role     Role     @default(USER)
+  gender String?
   password String
 
   @@map("user")

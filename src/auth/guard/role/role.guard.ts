@@ -12,11 +12,11 @@ export class RoleGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLE_KEY, [
-      context.getHandler(),
-      context.getClass(),
-    ]);
+      context.getHandler(), // check on specific route on controller
+      context.getClass(), // check on entire route on controller
+    ]); // this is from metadata the passed by decorator
 
-    const user = context.switchToHttp().getRequest().user;
+    const user = context.switchToHttp().getRequest().user; // from jwt guard
     const requiredRole = requiredRoles.some((role) => user.role === role);
 
     return requiredRole;
