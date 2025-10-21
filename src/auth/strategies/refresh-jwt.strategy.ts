@@ -13,11 +13,11 @@ export class RefreshJWTStrategy extends PassportStrategy(
 ) {
   constructor(
     @Inject(refreshConfig.KEY)
-    private readonly refreshJwtConfiguation: ConfigType<typeof refreshConfig>,
+    private readonly refreshJwtConfiguration: ConfigType<typeof refreshConfig>,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: refreshJwtConfiguation.secret as string,
+      secretOrKey: refreshJwtConfiguration.secret as string,
     });
   }
 

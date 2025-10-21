@@ -1,25 +1,15 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserController } from './user/user.controller';
-import { UserModule } from './user/user.module';
+import { UserController } from './modules/user/user.controller';
+import { UserModule } from './modules/user/user.module';
 import { loggerMiddleware } from './common/middleware/logger.middleware';
 import { AuthModule } from './auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
-// import dbConfig from './config/db.config';
 import { PrismaModule } from './prisma/prisma.module';
+import { QdrantModule } from './modules/qdrant/qdrant.module';
 
 @Module({
-  imports: [
-    // ConfigModule.forRoot({
-    //   isGlobal: true,
-    //   expandVariables: true,
-    //   load: [dbConfig],
-    // }),
-    PrismaModule,
-    UserModule,
-    AuthModule,
-  ],
+  imports: [PrismaModule, UserModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })

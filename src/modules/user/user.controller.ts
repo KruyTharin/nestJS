@@ -7,6 +7,7 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -20,6 +21,36 @@ import { Role } from 'src/enums/role.enum';
 @Controller('/v1/user')
 export class UserController {
   constructor(private userService: UserService) {}
+
+  @Post('collection')
+  async createCollection(
+    @Body('collectionName') collectionName: string,
+    @Body('vectorSize') vectorSize: number,
+  ) {
+    return await this.userService.createCollectionForUser(
+      collectionName,
+      vectorSize,
+    );
+  }
+
+  @Post('collection/vector')
+  async createVectorsToCollection(
+    @Body('collectionName') collectionName: string,
+    @Body('point') points: any,
+  ) {
+    return await this.userService.addVectorToCollection(collectionName, points);
+  }
+
+  @Get('collection/search/vector')
+  async searchVector(
+    @Body('collectionName') collectionName: string,
+    @Body('queryVector') queryVector: any,
+  ) {
+    return await this.userService.searchVectorsInCollection(
+      collectionName,
+      queryVector,
+    );
+  }
 
   @UseGuards(JwtAuthGuard)
   @Post()

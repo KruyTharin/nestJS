@@ -2,10 +2,29 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { QdrantService } from '../qdrant/qdrant.service';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private qdrantService: QdrantService,
+  ) {}
+
+  async createCollectionForUser(collectionName: string, vectorSize: number) {
+    return await this.qdrantService.createCollection(
+      collectionName,
+      vectorSize,
+    );
+  }
+
+  async addVectorToCollection(collectionName: string, points: any) {
+    return await this.qdrantService.addVectors(collectionName, points);
+  }
+
+  async searchVectorsInCollection(collectionName: string, query: any) {
+    return await this.qdrantService.searchVectors(collectionName, query);
+  }
 
   async create(createUserDto: CreateUserDto) {
     const hashedPassword = await this.hashPassword(createUserDto.password);

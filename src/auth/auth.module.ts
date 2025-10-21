@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { UserService } from 'src/user/user.service';
+import { UserService } from 'src/modules/user/user.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import jwtConfig from 'src/config/jwt.config';
@@ -10,6 +10,7 @@ import { JWTStrategy } from './strategies/jwt.strategy';
 import refreshJwtConfig from 'src/config/refresh-jwt.config';
 import { RefreshJWTStrategy } from './strategies/refresh-jwt.strategy';
 import { PrismaModule } from 'src/prisma/prisma.module';
+import { UserModule } from 'src/modules/user/user.module';
 
 @Module({
   imports: [
@@ -17,14 +18,9 @@ import { PrismaModule } from 'src/prisma/prisma.module';
     JwtModule.registerAsync(jwtConfig.asProvider()),
     ConfigModule.forFeature(jwtConfig),
     ConfigModule.forFeature(refreshJwtConfig),
+    UserModule,
   ],
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    UserService,
-    LocalStrategy,
-    JWTStrategy,
-    RefreshJWTStrategy,
-  ],
+  providers: [AuthService, LocalStrategy, JWTStrategy, RefreshJWTStrategy],
 })
 export class AuthModule {}
