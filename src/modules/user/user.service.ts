@@ -3,6 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { QdrantService } from '../qdrant/qdrant.service';
+import { PaginationDto } from 'src/dto/pagination.dto';
 
 @Injectable()
 export class UserService {
@@ -37,8 +38,23 @@ export class UserService {
     return user;
   }
 
-  async findAll() {
-    return this.prisma.user.findMany();
+  async findAll(paginationDto: PaginationDto) {
+    const { skip, limit } = paginationDto;
+
+    const [data, total] = await Promise.all([
+      this.prisma.user.findMany({
+        skip,
+        take: limit,
+      }),
+      this.prisma.user.count(),
+    ]);
+
+    return {
+      data,
+      total,
+      skip,
+      limit,
+    };
   }
 
   async find(id: string) {

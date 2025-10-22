@@ -6,10 +6,11 @@ import { UserModule } from './modules/user/user.module';
 import { loggerMiddleware } from './common/middleware/logger.middleware';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
-import { QdrantModule } from './modules/qdrant/qdrant.module';
+import { FileModule } from './modules/file/file.module';
+import { ReportModule } from './modules/report/report.module';
 
 @Module({
-  imports: [PrismaModule, UserModule, AuthModule],
+  imports: [PrismaModule, UserModule, AuthModule, FileModule, ReportModule],
   controllers: [AppController],
   providers: [AppService],
 })

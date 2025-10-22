@@ -17,8 +17,9 @@ import { JwtAuthGuard } from 'src/auth/guard/jwt-auth/jwt-auth.guard';
 import { RoleGuard } from 'src/auth/guard/role/role.guard';
 import { Roles } from 'src/decorators/role.descorator';
 import { Role } from 'src/enums/role.enum';
+import { PaginationDto } from 'src/dto/pagination.dto';
 
-@Controller('/v1/user')
+@Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
@@ -52,16 +53,16 @@ export class UserController {
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() createUser: CreateUserDto) {
     return await this.userService.create(createUser);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get()
-  async findAll(@Request() req) {
-    return this.userService.findAll();
+  async findAll(@Query() paginationDto: PaginationDto) {
+    return this.userService.findAll(paginationDto);
   }
 
   @UseGuards(JwtAuthGuard)
