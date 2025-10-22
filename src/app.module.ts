@@ -8,9 +8,17 @@ import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { FileModule } from './modules/file/file.module';
 import { ReportModule } from './modules/report/report.module';
+import { ChatModule } from './modules/chat/chat.module';
 
 @Module({
-  imports: [PrismaModule, UserModule, AuthModule, FileModule, ReportModule],
+  imports: [
+    PrismaModule,
+    UserModule,
+    AuthModule,
+    FileModule,
+    ReportModule,
+    ChatModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
